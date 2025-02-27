@@ -4,10 +4,11 @@ import SimpleITK as sitk
 from reacTk.decorator import asynchron
 from reacTk.widget.canvas.image import ImageData
 from widget_state import (
+    BoolState,
     HigherOrderState,
-    StringState,
-    ObjectState,
     NumberState,
+    ObjectState,
+    StringState,
     computed,
 )
 
@@ -21,10 +22,10 @@ class AppState(HigherOrderState):
         super().__init__()
 
         self.mri_dir = StringState("")
-        # self.mri_dir = StringState("data/mr_orig/")
         self.sitk_mask = ObjectState(sitk.Image(self.sitk_mri.value.GetSize(), sitk.sitkFloat64))
-        self.sitk_mri.on_change(lambda _: self.compute_mask(), trigger=True)
+        # self.sitk_mri.on_change(lambda _: self.compute_mask(), trigger=True)
 
+        self.loop = BoolState(False)
         self.slice = NumberState(0)
         self.window_center = NumberState(0)
         self.window_width = NumberState(0)
@@ -87,6 +88,9 @@ class AppState(HigherOrderState):
         color = color.reshape(1, 1, -1)
         mask = mask * color
 
+        if not((np.array(mask.shape) == np.array(img.shape)).all()):
+            mask = cv.resize(mask, img.shape[:2][::-1])
+
         res = cv.addWeighted(img, 1.0, mask, 0.3, 0.0)
 
         return ImageData(res)
@@ -96,3 +100,6 @@ class AppState(HigherOrderState):
         pixel_volume = np.product(sitk_mri.value.GetSpacing())
         volume = mask.value.sum() * pixel_volume
         return NumberState(volume / 1000000) 
+
+
+app_state = AppState()

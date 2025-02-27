@@ -6,14 +6,8 @@ import tkinter as tk
 from tkinter import ttk
 
 from .app import App
-from .state import AppState
-
-#TODO:
-#  * Basteln einer GUI
-#    * SliceView von MR inkl. Maske
-#    * Button, um das automatische durchlaufen der Slices zu aktivieren
-#  * Öffnen von einem Bild als Dicom über einen Ordner
-#  * Anwendung von TotalSegmentator ohne Zwischenzugriff auf GUI
+from .menu import MenuBar
+from .state import app_state
 
 root = tk.Tk()
 root.title("MRI Segmentation")
@@ -24,9 +18,11 @@ root.rowconfigure(0, weight=1, minsize=768)
 style = ttk.Style()
 style.theme_use("clam")
 
-state = AppState()
+menu_bar = MenuBar(root)
 
-app = App(root, state)
+app = App(root)
 app.grid(row=0, column=0, sticky="nswe")
+
+# root.after(100, lambda: app_state.mri_dir.set("data/mr_orig/"))
 
 root.mainloop()

@@ -9,7 +9,7 @@ from reacTk.widget.canvas.image import Image, ImageState
 from widget_state import NumberState, ObjectState, StringState
 
 from .scale import Scale, ScaleState
-from .state import AppState
+from .state import app_state
 
 
 class SliceScale(ttk.Frame):
@@ -48,7 +48,7 @@ class SliceScale(ttk.Frame):
 
         self.run_loop = False
         self.loop_thread: threading.Thread = None
-        self.on_button()
+        # self.on_button()
 
         self.scale.scale.config(command=self.on_scale)
 
@@ -83,10 +83,10 @@ class SliceScale(ttk.Frame):
 
 class App(ttk.Frame):
 
-    def __init__(self, parent: tk.Widget, state: AppState) -> None:
+    def __init__(self, parent: tk.Widget) -> None:
         super().__init__(parent)
 
-        self.state = state
+        self.state = app_state
 
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=7)
