@@ -45,14 +45,25 @@ class MenuFile(tk.Menu):
         self.add_command(label="Save Segmentation", command=self.save_segmentation)
 
     def open(self):
-        app_state.mri_dir.set(filedialog.askdirectory())
+        dirname = filedialog.askdirectory()
+        if not dirname:
+            return
+
+        app_state.mri_dir.set(dirname)
 
     def load_segmentation(self):
-        sitk_mask = read_image(filedialog.askopenfilename())
+        filename = filedialog.askopenfilename()
+        if not filename:
+            return
+
+        sitk_mask = read_image(filename)
         app_state.sitk_mask.set(sitk_mask)
 
     def save_segmentation(self):
         filename = filedialog.asksaveasfilename()
+        if not filename:
+            return
+
         filename, _ = os.path.splitext(filename)
         filename = filename + ".nii.gz"
         sitk.WriteImage(app_state.sitk_mask.value, filename)
