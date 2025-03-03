@@ -23,7 +23,7 @@ class AppState(HigherOrderState):
 
         self.mri_dir = StringState("")
         self.sitk_mask = ObjectState(sitk.Image(self.sitk_mri.value.GetSize(), sitk.sitkFloat64))
-        # self.sitk_mri.on_change(lambda _: self.compute_mask(), trigger=True)
+        self.sitk_mri.on_change(lambda _: self.compute_mask(), trigger=True)
 
         self.loop = BoolState(False)
         self.slice = NumberState(0)
