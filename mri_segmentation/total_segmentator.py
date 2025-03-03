@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 
 import SimpleITK as sitk
+from totalsegmentator.python_api import totalsegmentator
 
 from .util import read_image
 
@@ -22,7 +23,8 @@ def segment(sitk_mri: sitk.Image, subsets = None, fast = None) -> dict[str, sitk
             args.append("--roi_subset")
             args.extend(subsets)
 
-        subprocess.run(args)
+        # subprocess.run(args)
+        totalsegmentator(nifty_mri, dir_segmentation, task="total_mr", device="cpu", fast=fast, roi_subset=subsets)
         
         segmentations = {}
         for filename in os.listdir(dir_segmentation):
